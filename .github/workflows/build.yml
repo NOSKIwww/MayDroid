@@ -1,0 +1,147 @@
+name: Build MayDroid (.deb)
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Unpack embedded sources
+        run: |
+          base64 --decode > src.tgz <<'B64'
+          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
+          aZ7maZ7maZ7maZ7m6XbS/wL7iT0sAHgAAA==
+          B64
+          tar xzf src.tgz
+          rm -f src.tgz
+          echo "--- extracted tree ---"
+          ls -R
+
+      - name: Install ldid
+        run: brew install ldid || brew install xerub/ldid/ldid
+
+      - name: Install Theos (roothide) + iOS SDK
+        run: |
+          set -e
+          export THEOS=$HOME/theos
+          git clone --quiet --recursive https://github.com/roothide/theos.git "$THEOS"
+          echo "THEOS=$THEOS" >> "$GITHUB_ENV"
+          mkdir -p "$THEOS/sdks"
+          git clone -n --depth=1 --filter=tree:0 https://github.com/theos/sdks.git /tmp/sdks
+          cd /tmp/sdks
+          git sparse-checkout set --no-cone iPhoneOS16.5.sdk
+          git checkout
+          cp -r iPhoneOS16.5.sdk "$THEOS/sdks/"
+          ls "$THEOS/sdks"
+
+      - name: Build package
+        run: |
+          set -e
+          make clean || true
+          make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=roothide
+          ls -la packages/
+
+      - name: Upload .deb (artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: maydroid-deb
+          path: packages/*.deb
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: MayDroid build ${{ github.run_number }}
+          files: packages/*.deb
